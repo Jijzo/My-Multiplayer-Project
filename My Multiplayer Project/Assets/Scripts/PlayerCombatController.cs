@@ -48,6 +48,12 @@ public class PlayerCombatController : NetworkBehaviour
         Projectile projectile = Instantiate(projectileToSpawn);
         projectile.transform.position = spawnPosition;
         NetworkServer.Spawn(projectile.gameObject, connectionToClient);
+        NetworkIdentity networkIdentity = projectile.GetComponent<NetworkIdentity>();
+        networkIdentity.AssignClientAuthority(connectionToClient);     
+        projectile.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward, ForceMode.Impulse);
+
+        //This almost works as intended. I want the ball to shoot out of the direction of the client's camera.
+        //As of now, it shoots from the camera that the host has.
     }
     Transform GetRightHandTransform()
     {
