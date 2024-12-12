@@ -8,25 +8,16 @@ public class Projectile : NetworkBehaviour
     [SerializeField] float timer = 0f;
 
     private Vector3 direction;
-
+    private Rigidbody rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (isOwned)
-        {
-            if (!isServer)
-            {
-
-            }
-            else
-            {
-                direction = Camera.main.transform.forward;
-            }
-        }
-
-
+        rb = GetComponent<Rigidbody>();
+        direction = Camera.main.transform.forward;
+        CmdAddForce();
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -35,11 +26,13 @@ public class Projectile : NetworkBehaviour
         {
             Destroy(gameObject);
         }
-        else
-        {
-            transform.Translate(direction * speed * Time.deltaTime);
-        }
 
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdAddForce()
+    {
+        rb.AddForce(direction, ForceMode.Impulse);
     }
 
 
