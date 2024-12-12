@@ -153,8 +153,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afa55bce739910447ac389c172a99bdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   speed: 10
-  maxLifeTime: 1
+  maxLifeTime: 10
   timer: 0
 --- !u!135 &5148092870730048272
 SphereCollider:

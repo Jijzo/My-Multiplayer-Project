@@ -13,9 +13,20 @@ public class Projectile : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        direction = Camera.main.transform.forward;
-    }
+        if (isOwned)
+        {
+            if (!isServer)
+            {
 
+            }
+            else
+            {
+                direction = Camera.main.transform.forward;
+            }
+        }
+
+
+    }
     // Update is called once per frame
     void Update()
     {
@@ -30,6 +41,12 @@ public class Projectile : NetworkBehaviour
         }
 
     }
+
+
+   
+
+
+    
 
 
 

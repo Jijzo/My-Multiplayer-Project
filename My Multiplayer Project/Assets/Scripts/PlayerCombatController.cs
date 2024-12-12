@@ -36,11 +36,18 @@ public class PlayerCombatController : NetworkBehaviour
 
         if (_starterAssetsInputs.shoot && timeBetweenShotsActual > timeBetweenShotsThreshold)
         {
-            Projectile projectile = Instantiate(projectileToSpawn);
-            projectile.transform.position = GetRightHandTransform().position;
+            CmdShoot(GetRightHandTransform().position);
             timeBetweenShotsActual = 0f;
         }
 
+    }
+
+    [Command] 
+    private void CmdShoot(Vector3 spawnPosition)
+    {
+        Projectile projectile = Instantiate(projectileToSpawn);
+        projectile.transform.position = spawnPosition;
+        NetworkServer.Spawn(projectile.gameObject, connectionToClient);
     }
     Transform GetRightHandTransform()
     {
