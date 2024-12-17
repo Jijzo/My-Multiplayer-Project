@@ -11,10 +11,7 @@ public class Projectile : NetworkBehaviour
     private Rigidbody rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        //CmdAddForce();
-    }
+
 
     // Update is called once per frame
     void Update()
@@ -27,24 +24,16 @@ public class Projectile : NetworkBehaviour
 
     }
 
-    //[Command (requiresAuthority = false)]
-    //private void CmdAddForce()
-    //{
-    //    rb = GetComponent<Rigidbody>();
-    //    direction = Camera.main.transform.forward;
-    //    NetworkIdentity networkIdentity = GetComponent<NetworkIdentity>();
-    //    networkIdentity.AssignClientAuthority(connectionToClient);
-    //    rb.AddForce(direction, ForceMode.Impulse);
-    //}
 
 
 
 
 
-   
 
 
-    
+
+
+
 
 
 

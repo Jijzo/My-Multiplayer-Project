@@ -1563,6 +1563,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86051a3d225d4740b88925172b679e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   rightHandTransform: {fileID: 6044159111065775861}
   projectileToSpawn: {fileID: 8944272646862927283, guid: 233458626d7511244bd9f333f3dc994b,
     type: 3}

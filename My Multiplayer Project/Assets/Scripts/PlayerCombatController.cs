@@ -13,9 +13,12 @@ public class PlayerCombatController : NetworkBehaviour
 
     private PlayerInput _playerInput;
     private StarterAssetsInputs _starterAssetsInputs;
+    private NetworkIdentity _networkIdentity;
+    private Ray _ray;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _networkIdentity = GetComponent<NetworkIdentity>();
         _playerInput = GetComponent<PlayerInput>();
         _starterAssetsInputs = GetComponent<StarterAssetsInputs>();
     }
@@ -24,39 +27,47 @@ public class PlayerCombatController : NetworkBehaviour
     void Update()
     {
         timeBetweenShotsActual += Time.deltaTime;
+
+        //This line of code is working correctly and I am retrieving the values. 
+        //Debug.Log(_starterAssetsInputs.GetLook());
+
         Shoot();
     }
 
     private void Shoot()
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        Debug.DrawRay(transform.position, transform.TransformDirection(ray.direction) * 1000, Color.white);
-
         if (_starterAssetsInputs.shoot && timeBetweenShotsActual > timeBetweenShotsThreshold)
         {
-            CmdShoot(GetRightHandTransform().position);
+            //Debug.Log(_starterAssetsInputs.GetLook() + "Shoot");
+            CmdShoot();
             timeBetweenShotsActual = 0f;
         }
-
     }
+    //    private void CmdShoot(Vector3 spawnPosition)
 
     [Command] 
-    private void CmdShoot(Vector3 spawnPosition)
+    private void CmdShoot()
     {
+        TargetShootProjectile(_networkIdentity.connectionToClient, rightHandTransform.position);
+    }
+
+    [TargetRpc]
+    private void TargetShootProjectile(NetworkConnectionToClient target, Vector3 spawnPosition)
+    {
+        //_networkIdentity.AssignClientAuthority(connectionToClient);
+        _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Projectile projectile = Instantiate(projectileToSpawn);
         projectile.transform.position = spawnPosition;
         NetworkServer.Spawn(projectile.gameObject, connectionToClient);
-        NetworkIdentity networkIdentity = projectile.GetComponent<NetworkIdentity>();
-        networkIdentity.AssignClientAuthority(connectionToClient);     
-        projectile.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward, ForceMode.Impulse);
-
-        //This almost works as intended. I want the ball to shoot out of the direction of the client's camera.
-        //As of now, it shoots from the camera that the host has.
+        Debug.Log(_networkIdentity.connectionToClient + " If Null, the server has authority of this object");
+        projectile.GetComponent<Rigidbody>().AddForce(_ray.direction, ForceMode.Impulse);
+        //Debug.Log(_ray.direction + "This is the Ray.direction of this camera. Hopefully it is different.");
+        //Debug.Log("This is TargetShootProjectile() from a specific client");
     }
-    Transform GetRightHandTransform()
+
+    [Command]
+    void CmdPickupItem(NetworkIdentity item)
     {
-        return rightHandTransform;
+        item.AssignClientAuthority(connectionToClient);
     }
 }
