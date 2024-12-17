@@ -7,23 +7,17 @@ public class Projectile : NetworkBehaviour
     [SerializeField] float maxLifeTime = 3f;
     [SerializeField] float timer = 0f;
 
-    private Vector3 direction;
-    private Rigidbody rb;
-
+    public Rigidbody rb;
+    public NetworkIdentity _networkIdentity;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        timer += Time.deltaTime;
-        if (timer > maxLifeTime)
-        {
-            Destroy(gameObject);
-        }
+            Debug.Log(_networkIdentity.isOwned);
+            Debug.Log(_networkIdentity.connectionToClient + " Server has Authority if this is Null");
+            rb.AddForce(transform.forward * speed);
 
     }
-
 
 
 

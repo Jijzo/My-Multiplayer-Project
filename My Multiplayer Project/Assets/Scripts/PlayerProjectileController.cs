@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerCombatController : NetworkBehaviour
+public class PlayerProjectileController : NetworkBehaviour
 {
 
     [SerializeField] Transform rightHandTransform = null;
@@ -46,7 +46,7 @@ public class PlayerCombatController : NetworkBehaviour
     {
         TargetGetShootingDirection();
         GameObject projectile = Instantiate(projectileToSpawn, rightHandTransform.position, rightHandTransform.rotation);
-        NetworkServer.Spawn(projectile);
+        NetworkServer.Spawn(projectile, connectionToClient);
     }
 
 
