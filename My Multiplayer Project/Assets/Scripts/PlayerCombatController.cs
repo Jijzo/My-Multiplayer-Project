@@ -1,5 +1,6 @@
 using Mirror;
 using StarterAssets;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +8,7 @@ public class PlayerCombatController : NetworkBehaviour
 {
 
     [SerializeField] Transform rightHandTransform = null;
-    [SerializeField] Projectile projectileToSpawn = null;
+    [SerializeField] GameObject projectileToSpawn = null;
     [SerializeField] float timeBetweenShotsThreshold = 2f;
     [SerializeField] float timeBetweenShotsActual = 0f;
 
@@ -27,10 +28,6 @@ public class PlayerCombatController : NetworkBehaviour
     void Update()
     {
         timeBetweenShotsActual += Time.deltaTime;
-
-        //This line of code is working correctly and I am retrieving the values. 
-        //Debug.Log(_starterAssetsInputs.GetLook());
-
         Shoot();
     }
 
@@ -38,36 +35,27 @@ public class PlayerCombatController : NetworkBehaviour
     {
         if (_starterAssetsInputs.shoot && timeBetweenShotsActual > timeBetweenShotsThreshold)
         {
-            //Debug.Log(_starterAssetsInputs.GetLook() + "Shoot");
             CmdShoot();
             timeBetweenShotsActual = 0f;
         }
     }
-    //    private void CmdShoot(Vector3 spawnPosition)
 
-    [Command] 
+    
+    [Command]
     private void CmdShoot()
     {
-        TargetShootProjectile(_networkIdentity.connectionToClient, rightHandTransform.position);
+        TargetGetShootingDirection();
+        GameObject projectile = Instantiate(projectileToSpawn, rightHandTransform.position, rightHandTransform.rotation);
+        NetworkServer.Spawn(projectile);
     }
 
+
+    //TargetRPC Attribute runs a function on a specific client. In this case, we want the specific client's
+    //camera direction for the projectile. 
     [TargetRpc]
-    private void TargetShootProjectile(NetworkConnectionToClient target, Vector3 spawnPosition)
+    private void TargetGetShootingDirection()
     {
-        //_networkIdentity.AssignClientAuthority(connectionToClient);
         _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Projectile projectile = Instantiate(projectileToSpawn);
-        projectile.transform.position = spawnPosition;
-        NetworkServer.Spawn(projectile.gameObject, connectionToClient);
-        Debug.Log(_networkIdentity.connectionToClient + " If Null, the server has authority of this object");
-        projectile.GetComponent<Rigidbody>().AddForce(_ray.direction, ForceMode.Impulse);
-        //Debug.Log(_ray.direction + "This is the Ray.direction of this camera. Hopefully it is different.");
-        //Debug.Log("This is TargetShootProjectile() from a specific client");
-    }
-
-    [Command]
-    void CmdPickupItem(NetworkIdentity item)
-    {
-        item.AssignClientAuthority(connectionToClient);
+        Debug.Log("[TargetRpc] method on client: " + _networkIdentity.netId + _ray.direction);
     }
 }

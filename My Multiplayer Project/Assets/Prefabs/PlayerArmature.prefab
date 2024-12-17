@@ -1567,7 +1567,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   rightHandTransform: {fileID: 6044159111065775861}
-  projectileToSpawn: {fileID: 8944272646862927283, guid: 233458626d7511244bd9f333f3dc994b,
+  projectileToSpawn: {fileID: 2239972406723502744, guid: 233458626d7511244bd9f333f3dc994b,
     type: 3}
   timeBetweenShotsThreshold: 2
   timeBetweenShotsActual: 0
