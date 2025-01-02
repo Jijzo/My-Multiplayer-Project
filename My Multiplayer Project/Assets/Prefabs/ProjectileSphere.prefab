@@ -192,11 +192,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  speed: 10
-  maxLifeTime: 10
+  speed: 300
+  maxLifeTime: 5
   timer: 0
   rb: {fileID: 3286272176022391528}
-  _networkIdentity: {fileID: 6534152041312521623}
 --- !u!54 &3286272176022391528
 Rigidbody:
   m_ObjectHideFlags: 0
