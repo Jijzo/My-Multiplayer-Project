@@ -10,6 +10,11 @@ public class PunchBoxTargeter : NetworkBehaviour
         boxCollider.enabled = false;
     }
 
+    [Command]
+    void CmdTakeDamage(GameObject player)
+    {
+        player.GetComponent<PlayerCombatController>().health -= 5;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == playerGameObject) return;
@@ -17,13 +22,8 @@ public class PunchBoxTargeter : NetworkBehaviour
         {
             CmdTakeDamage(other.gameObject);
             Debug.Log("OnTriggerEnter");
+            boxCollider.enabled = false;
         }
 
-    }
-
-    [Command]
-    void CmdTakeDamage(GameObject player)
-    {
-        player.gameObject.GetComponent<PlayerCombatController>().health -= 5;
     }
 }

@@ -1,5 +1,7 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM 
+using System.Collections;
+
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using Mirror;
 using Unity.Cinemachine;
@@ -18,8 +20,10 @@ namespace StarterAssets
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
+        [SyncVar]
         public float MoveSpeed = 2.0f;
 
+        [SyncVar]
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
@@ -413,5 +417,27 @@ namespace StarterAssets
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
+
+        [Command]
+        public void CmdIncreaseSpeed(float speed, float boostTimer)
+        {
+            TargetIncreaseSpeed(speed, boostTimer);
+        }
+
+        [TargetRpc]
+        private void TargetIncreaseSpeed(float speed, float boostTimer)
+        {
+            //If we want to increase a value on a specific client, we want to use a TargetRPC like this one.
+            //Now, we want to have the player's speed return back to normal after a certain amount of time.
+            //I have tried a coroutine but not with this setup of Commands and RPCs. I will try to send a coroutine through
+            //this method.
+
+
+            MoveSpeed += speed;
+            Debug.Log("This should only appear on one client.");
+            Debug.Log(speed);
+            Debug.Log(boostTimer);
+        }
+
     }
 }
